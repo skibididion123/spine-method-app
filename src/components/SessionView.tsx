@@ -108,8 +108,8 @@ export function SessionView({ config, state, onPause, onResume, onAbort }: Props
           <span className="spec-v">{config.restSec}s</span>
         </div>
         <div>
-          <span className="spec-k">Metronome</span>
-          <span className="spec-v">every 5s</span>
+          <span className="spec-k">Final rest</span>
+          <span className="spec-v">{config.skipFinalRest ? 'Skip' : 'Keep'}</span>
         </div>
       </div>
 

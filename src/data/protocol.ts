@@ -54,6 +54,8 @@ export type SessionConfig = {
   cycles: number
   hangSec: number
   restSec: number
+  /** End after the last hang instead of a final rest. */
+  skipFinalRest: boolean
 }
 
 export const DEFAULT_CONFIG: SessionConfig = {
@@ -62,13 +64,17 @@ export const DEFAULT_CONFIG: SessionConfig = {
   cycles: 6,
   hangSec: 15,
   restSec: 45,
+  skipFinalRest: false,
 }
 
 export const METRONOME_INTERVAL_MS = 5000
 
 export function sessionDurationSec(cfg: SessionConfig): number {
-  // Full cycles: hang + rest for each cycle
-  return cfg.cycles * (cfg.hangSec + cfg.restSec)
+  const hangs = cfg.cycles * cfg.hangSec
+  const rests = cfg.skipFinalRest
+    ? Math.max(0, cfg.cycles - 1) * cfg.restSec
+    : cfg.cycles * cfg.restSec
+  return hangs + rests
 }
 
 export function formatDuration(totalSec: number): string {

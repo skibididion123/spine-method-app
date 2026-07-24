@@ -97,6 +97,7 @@ export function useSession(cfg: SessionConfig) {
           mode: c.mode,
           presetId: c.presetId,
           finished: true,
+          skippedFinalRest: c.skipFinalRest,
         })
       } else if (phase === 'prep') playPrepCue()
 
@@ -113,7 +114,12 @@ export function useSession(cfg: SessionConfig) {
         return
       }
       if (phase === 'hang') {
-        // After hang always rest (including last cycle — full protocol cycle)
+        // Last hang: optional skip of final rest
+        if (c.skipFinalRest && cycle >= c.cycles) {
+          enterPhase('done', cycle)
+          stopLoop()
+          return
+        }
         enterPhase('rest', cycle)
         return
       }
